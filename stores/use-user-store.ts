@@ -2,7 +2,7 @@
 
 import { create } from "zustand"
 
-import type { User } from "@/service/user.service"
+import type { User } from "@/type/user-type/usertype"
 
 type UserState = {
   user: User | null

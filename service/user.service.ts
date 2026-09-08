@@ -1,60 +1,7 @@
 import { apiRequest } from "@/service/api"
+import type { UpdateUserPayload, UpdateUserSettingsPayload, User, UserProfile } from "@/type/user-type/usertype"
 
-export type UserRole = "USER" | "ADMIN_MEMBER" | "ADMIN" | "SUPER_ADMIN"
-export type UserStatus = "online" | "offline" | "idle" | "dnd"
-
-export type UserProfile = {
-  id: string
-  username: string | null
-  firstname: string | null
-  lastname: string | null
-  age: number | null
-  roles: UserRole[]
-  avatar: string | null
-  banner: string | null
-  status: UserStatus
-  title: string | null
-  bio: string | null
-  nikname: string | null
-  textstatus: string | null
-  premium: boolean
-  createdAt: string
-  updatedAt: string
-}
-
-export type User = UserProfile & {
-  email: string
-  phonenuber: string | null
-  googleemail: string | null
-  githubemail: string | null
-  note: string | null
-  bestfriends: string[]
-}
-
-export type UpdateUserPayload = Partial<Pick<User,
-  | "username"
-  | "firstname"
-  | "lastname"
-  | "age"
-  | "avatar"
-  | "banner"
-  | "status"
-  | "title"
-  | "bio"
-  | "nikname"
-  | "textstatus"
-  | "email"
-  | "phonenuber"
-  | "googleemail"
-  | "githubemail"
-  | "note"
-  | "bestfriends"
->>
-
-export type UpdateUserSettingsPayload = {
-  roles?: UserRole[]
-  premium?: boolean
-}
+export type { User, UserProfile, UserRole, UserStatus, UpdateUserPayload, UpdateUserSettingsPayload } from "@/type/user-type/usertype"
 
 function authHeaders(accessToken: string) {
   if (!accessToken.trim()) {
@@ -107,3 +54,4 @@ export const userService = {
     })
   },
 }
+
