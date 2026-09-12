@@ -5,6 +5,7 @@ import { ApiError } from "@/service/api"
 import { authService } from "@/service/auth.service"
 import { useUserStore } from "@/stores/use-user-store"
 import { useServerStore } from "@/stores/use-server-store"
+import { useServerMemberStore } from "@/stores/use-server-member-store"
 import type { AuthActions, AuthResponse, AuthState } from "@/type/auth-type/authtype"
 
 const initialState: AuthState = {
@@ -42,6 +43,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => {
       if (get().user?.id !== user.id) {
         useUserStore.getState().clearUser()
         useServerStore.getState().clear()
+        useServerMemberStore.getState().clear()
       }
       set({ accessToken, sessionId, user, isAuthenticated: true,
         isInitialized: true, isLoading: false, error: null })
@@ -49,6 +51,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => {
     clearAuth: () => {
       useUserStore.getState().clearUser()
       useServerStore.getState().clear()
+      useServerMemberStore.getState().clear()
       set({ ...initialState, isInitialized: true })
     },
     setLoading: (isLoading) => set({ isLoading }),

@@ -9,7 +9,7 @@ Yangi interfeyslar oddiy HTML: ranglar, CSS va dizayn qo'shilmaydi.
 | 1 | Auth types, service, store, login/register, cookie refresh, logout, serverga yo'naltirish | Kod yozildi, tekshirilmagan |
 | 2 | User profili, user settings, premium; type/service/store/component/page | Kod yozildi, tekshirilmagan |
 | 3 | Serverlar ro'yxati, yaratish, tafsilot va nom sozlamalari; barcha qatlamlar | Kod yozildi, tekshirilmagan |
-| 4 | Server a'zolarini qo'shish/chiqarish va SERVER_USER yaratish; barcha qatlamlar | Kutilmoqda |
+| 4 | Server a'zolarini qo'shish/chiqarish va SERVER_USER yaratish; barcha qatlamlar | Kod yozildi, tekshirilmagan |
 | 5 | Guruhlar, a'zolar va canEnter sozlamalari; barcha qatlamlar | Kutilmoqda |
 | 6 | Team yaratish va guruh ichida ko'rsatish; barcha qatlamlar | Kutilmoqda |
 | 7 | Voice HTTP/ICE, Socket.IO, WebRTC, mikrofon, quloqchin, ekran, reconnect; barcha qatlamlar | Kutilmoqda |
@@ -108,3 +108,36 @@ Test, lint, build, API sinovlari, commit va push bajarilmadi.
 
 3-qism uchun commit nomi: `feat(server): connect server list creation and settings`.
 Keyingi qism: server a'zolari va SERVER_USER hisoblarini boshqarish.
+
+## 4-qism fayllari
+
+- `type/server-type/server-member-type.ts`: a'zo qo'shish, chiqarish, maxsus
+  hisob yaratish payload/javoblari va store turlari.
+- `service/server.service.ts`: POST /servers/:id/members,
+  DELETE /servers/:id/members/:userId, POST /servers/:id/users.
+- `stores/use-server-member-store.ts`: yozish amallari, loading, error,
+  muvaffaqiyat va yaratilgan hisobning backend qaytargan ma'lumotlari.
+- `components/server/server-member-forms.tsx`: mavjud userni ID orqali qo'shish
+  va email/parol bilan SERVER_USER yaratish. Username, ism va familiya ixtiyoriy.
+- `components/server/remove-server-member-button.tsx`: a'zoni chiqarish.
+- `components/server/server-member-feedback.tsx`: natija va yangi hisob ma'lumotlari.
+- `components/server/server-details.tsx`: mavjud /servers/[serverId] sahifasiga
+  boshqaruv componentlari ulandi; egani chiqarish tugmasi ko'rsatilmaydi.
+- `components/server/server-settings-form.tsx`: a'zolik amali davomida nom formasi band.
+- `stores/use-auth-store.ts`: logout/hisob almashganda a'zolik store tozalanadi.
+
+Boshqaruv faqat server egasiga ko'rsatiladi; haqiqiy huquqni backend tekshiradi.
+SUPER_ADMIN roli boshqa egaga tegishli server a'zolarini boshqarish huquqini bermaydi.
+Yangi hisobning accountType/assignedServerId/roles qiymatlari frontenddan yuborilmaydi.
+Parol store yoki storagega yozilmaydi; muvaffaqiyatli yaratishdan keyin forma tozalanadi.
+Egasi yangi user nomidan login qilmaydi, egasining sessiyasi o'zgarmaydi.
+
+Muvaffaqiyatli amaldan keyin server tafsilotlari va ro'yxati qayta olinadi.
+Yangilash so'rovi xatosi alohida ko'rsatiladi: muvaffaqiyatli yaratish amali qayta
+yuborilmaydi. Logout eski so'rov natijalarini frontend storega yozishni to'xtatadi.
+Serverdan chiqarish hisobni o'chirmaydi; server/guruhga kirish backendda bekor qilinadi.
+Maxsus hisobni boshqa serverga qo'shish cheklovini backend tekshiradi.
+
+Test, lint, build, API sinovlari, commit va push bajarilmadi.
+4-qism uchun commit nomi: `feat(server): manage members and server user accounts`.
+Keyingi qism: guruhlar, guruh a'zolari va canEnter ruxsatlari.
