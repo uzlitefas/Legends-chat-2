@@ -2,6 +2,7 @@
 
 import { create } from "zustand"
 import { ApiError } from "@/service/api"
+import { useVoiceStore } from "@/stores/use-voice-store"
 import { useGroupStore } from "@/stores/use-group-store"
 import { useTeamStore } from "@/stores/use-team-store"
 import { authService } from "@/service/auth.service"
@@ -43,6 +44,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => {
     ...initialState,
     setAuth: ({ accessToken, sessionId, user }) => {
       if (get().user?.id !== user.id) {
+        useVoiceStore.getState().leave()
         useTeamStore.getState().clear()
         useGroupStore.getState().clear()
         useUserStore.getState().clearUser()
@@ -53,6 +55,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => {
         isInitialized: true, isLoading: false, error: null })
     },
     clearAuth: () => {
+      useVoiceStore.getState().leave()
       useTeamStore.getState().clear()
       useGroupStore.getState().clear()
       useUserStore.getState().clearUser()

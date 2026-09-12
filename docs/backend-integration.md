@@ -12,7 +12,7 @@ Yangi interfeyslar oddiy HTML: ranglar, CSS va dizayn qo'shilmaydi.
 | 4 | Server a'zolarini qo'shish/chiqarish va SERVER_USER yaratish; barcha qatlamlar | Kod yozildi, tekshirilmagan |
 | 5 | Guruhlar, a'zolar va canEnter sozlamalari; barcha qatlamlar | Kod yozildi, tekshirilmagan |
 | 6 | Team yaratish va guruh ichida ko'rsatish; barcha qatlamlar | Kod yozildi, tekshirilmagan |
-| 7 | Voice HTTP/ICE, Socket.IO, WebRTC, mikrofon, quloqchin, ekran, reconnect; barcha qatlamlar | Kutilmoqda |
+| 7 | Voice HTTP/ICE, Socket.IO, WebRTC, mikrofon, quloqchin, ekran, reconnect; barcha qatlamlar | Kod yozildi, tekshirilmagan |
 
 ## 1-qism fayllari
 
@@ -204,3 +204,65 @@ Test, lint, build, API sinovlari, commit va push bajarilmadi.
 
 6-qism uchun commit nomi: `feat(team): connect team creation and group team list`.
 Keyingi qism: voice, mikrofon, quloqchin, ekran ulash va reconnect.
+
+## 7-qism fayllari
+
+- `type/voice-type/voicetype.ts`: xona, qatnashchi, media holati, ICE,
+  callback va store turlari.
+- `service/voice.service.ts`: voice xona va ICE HTTP endpointlari,
+  API manzilidan Socket.IO namespace manzilini aniqlash.
+- `lib/voice/session.js`: backend demo/session.js asosida moslangan
+  Socket.IO sessiyasi; npm klienti va frontend HTTP service ishlatiladi.
+- `lib/voice/peer.js`: backend demo/peer.js dan olingan WebRTC peer mantiqi;
+  offer to'qnashuvi, ICE navbati, ekran renegotiation va ICE restart.
+- `lib/voice/session.d.ts`: sessiyaning TypeScript interfeysi.
+- `stores/use-voice-store.ts`: ulanish, qatnashchilar, audio/video oqimlari,
+  mikrofon/quloqchin/ekran, qayta ulanish va tozalash.
+- `components/voice/voice-media.tsx`: audio/video ijrosi va autoplay bloklanganda tugma.
+- `components/voice/voice-room.tsx`: dizaynsiz boshqaruvlar va qatnashchilar.
+- `app/(app)/servers/[serverId]/groups/[groupId]/teams/[teamId]/voice/page.tsx`: voice sahifasi.
+- `components/team/team-list.tsx`: har team uchun voice havolasi.
+- `stores/use-auth-store.ts`: logout yoki hisob almashganda voice sessiyasini yopish.
+- `package.json`, `package-lock.json`: socket.io-client bog'liqligi.
+
+### Ulanish va media
+
+Kirishi bilan mikrofon o'chiq boshlanadi. Mikrofon ruxsati brauzerdan olinadi;
+quloqchin tugmasi kelayotgan audio ijrosini boshqaradi. Ekran tanlash faqat
+tugma bosilganda ochiladi; ekran ovozi yozilmaydi. Ekranni brauzerning o'zidan
+to'xtatish ham track va backend holatini yangilaydi.
+
+Socket.IO `/voice` namespace, `/socket.io` transport path va websocket transport
+ishlatadi. Token auth.token orqali yuboriladi. HTTP voice/ice konfiguratsiyasi
+har ulanishda olinadi. Signaling va media so'rovlari ketma-ket yuboriladi,
+chunki backend exception javobida request ID yo'q. Kutish vaqti 8 soniya.
+
+Xonadan chiqish, boshqa sahifaga o'tish, pagehide, logout, socket disconnect
+va voice:removed holatlarida lokal tracklar va peer ulanishlari yopiladi.
+Chiqishda socket disconnect qilinadi, backend shu orqali a'zolikni tozalaydi.
+Transport uzilganda 1, 2, 4, 8, 10, 10 soniya oralig'ida qayta urinish mavjud.
+Qayta kirishda mikrofon o'chiq va ekran ulash to'xtagan holatda boshlanadi.
+WebRTC failed holatida har peer uchun ko'pi bilan 3 ICE restart bor.
+
+Backend uzishi (jumladan JWT muddati tugashi), ruxsat bekor qilinishi yoki TURN
+credential muddati tugashida avtomatik qayta kirilmaydi. Sessiyani yangilash
+tugmasi bilan tokenni yangilab, voicega yana kirish kerak. Uzoq suhbatda TURN
+credentiallarini uzilishsiz yangilash bu backend demo mantiqida mavjud emas.
+Access token va media oqimlari faqat xotirada saqlanadi.
+
+### Muhit
+
+- `NEXT_PUBLIC_API_URL`: standart `http://localhost:3001/api`.
+- `NEXT_PUBLIC_VOICE_URL`: ixtiyoriy to'liq namespace manzili,
+  masalan `https://api.example.com/voice`. Berilmasa API origin + `/voice`.
+- Backend `VOICE_ALLOWED_ORIGINS` ichida frontendning aniq origini bo'lishi kerak.
+- Mikrofon/ekran uchun HTTPS yoki localhost kerak.
+- Alohida tarmoqlardagi media uchun backenddagi TURN sozlamalari kerak;
+  konfiguratsiya backend `/voice/ice` endpointidan olinadi.
+
+Backendni yoki uning muhit fayllarini o'zgartirish bajarilmadi.
+socket.io-client o'rnatildi. Test, lint, build, real API, brauzer media
+va TURN sinovlari bajarilmadi. Commit va push bajarilmadi.
+
+7-qism uchun commit nomi: `feat(voice): connect voice chat screen sharing and reconnect`.
+7 qismning kodi yozildi; foydalanuvchi tekshiruvi kutiladi.
