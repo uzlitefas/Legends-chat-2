@@ -1,5 +1,5 @@
 import { apiRequest } from "@/service/api"
-import type { UpdateUserPayload, UpdateUserSettingsPayload, User, UserProfile } from "@/type/user-type/usertype"
+import type { UpdateUserPayload, UpdateUserSettingsPayload, User, UserProfile, UserWriteResponse } from "@/type/user-type/usertype"
 
 export type { User, UserProfile, UserRole, UserStatus, UpdateUserPayload, UpdateUserSettingsPayload } from "@/type/user-type/usertype"
 
@@ -28,11 +28,12 @@ export const userService = {
   },
 
   async updateMe(payload: UpdateUserPayload, accessToken: string): Promise<User> {
-    return apiRequest<User>("users/me", {
+    const user = await apiRequest<UserWriteResponse>("users/me", {
       method: "PATCH",
       headers: authHeaders(accessToken),
       body: JSON.stringify(payload),
     })
+    return { ...user, defaultServerId: user.assignedServerId }
   },
 
   async getProfile(id: string, accessToken: string): Promise<UserProfile> {
@@ -47,11 +48,12 @@ export const userService = {
     payload: UpdateUserSettingsPayload,
     accessToken: string
   ): Promise<User> {
-    return apiRequest<User>(`${userPath(id)}/settings`, {
+    const user = await apiRequest<UserWriteResponse>(`${userPath(id)}/settings`, {
       method: "PATCH",
       headers: authHeaders(accessToken),
       body: JSON.stringify(payload),
     })
+    return { ...user, defaultServerId: user.assignedServerId }
   },
 }
 

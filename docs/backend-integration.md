@@ -7,7 +7,7 @@ Yangi interfeyslar oddiy HTML: ranglar, CSS va dizayn qo'shilmaydi.
 | Qism | Ish | Holat |
 | --- | --- | --- |
 | 1 | Auth types, service, store, login/register, cookie refresh, logout, serverga yo'naltirish | Kod yozildi, tekshirilmagan |
-| 2 | User profili, user settings, premium; type/service/store/component/page | Kutilmoqda |
+| 2 | User profili, user settings, premium; type/service/store/component/page | Kod yozildi, tekshirilmagan |
 | 3 | Serverlar ro'yxati, yaratish, tafsilot va nom sozlamalari; barcha qatlamlar | Kutilmoqda |
 | 4 | Server a'zolarini qo'shish/chiqarish va SERVER_USER yaratish; barcha qatlamlar | Kutilmoqda |
 | 5 | Guruhlar, a'zolar va canEnter sozlamalari; barcha qatlamlar | Kutilmoqda |
@@ -43,3 +43,39 @@ Foydalanuvchi so'roviga ko'ra test, lint, build va haqiqiy API sinovlari bajaril
 Commit va push bajarilmadi. Keyingi qism foydalanuvchi davom ettirishni aytganda yoziladi.
 
 1-qism uchun commit nomi: feat(auth): connect backend authentication and session pages
+
+## 2-qism fayllari
+
+- `type/user-type/usertype.ts`: accountType, assignedServerId, defaultServerId,
+  PATCH javobi va user store turlari.
+- `type/premium-type/premiumtype.ts`: premium payload va javob turlari.
+- `service/user.service.ts`: PATCH javobidagi assignedServerId orqali defaultServerId tiklanadi.
+- `service/premium.service.ts`: PATCH /premium/:id.
+- `stores/use-user-store.ts`: profilni yuklash, tahrirlash, boshqa profilni olish,
+  user settings va premium amallari; loading, error, success holatlari.
+  Logoutda eski so'rov natijalari bekor qilinadi.
+- `components/user/`: profil tafsilotlari, tahrirlash, ID orqali profil qidirish,
+  admin sozlamalari va so'rov natijasini ko'rsatish componentlari.
+- `app/(app)/profile/page.tsx`: /profile — o'z profilini ko'rish va tahrirlash.
+- `app/(app)/users/page.tsx`: /users — ID orqali ochiq profilni olish.
+- `app/(app)/users/settings/page.tsx`: /users/settings — SUPER_ADMIN uchun
+  rollar/premium va alohida premium endpointi.
+- `components/auth/session-panel.tsx`: yangi sahifalarga havolalar.
+- `components/auth/auth-boundary.tsx`: SERVER_USER hisobiga /profile va /users
+  sahifalarini ochishga ruxsat; foydalanuvchilar doirasini backend tekshiradi.
+
+Profil formasi faqat o'zgargan maydonlarni yuboradi. Bo'shatilgan ixtiyoriy
+maydonlar null, bo'sh do'stlar ro'yxati [] sifatida yuboriladi. Backenddagi
+`nikname` va `phonenuber` yozilishi aynan saqlangan. Avatar/banner fayl yuklash
+emas, URL maydonlari. Account type va assigned server profil orqali yuborilmaydi.
+
+Admin formasida rollarni va/yoki premiumni o'zgartirish alohida belgilanadi.
+Rollar tanlangan ro'yxat bilan to'liq almashtiriladi. Premiumning alohida formasi
+PATCH /premium/:id endpointiga ulanadi. Haqiqiy ruxsatni backend tekshiradi.
+
+Bu qismda avtomatik token refresh/retry kiritilmadi; access token tugaganda
+sessiyani yangilash tugmasidan foydalanib so'rovni qayta yuborish mumkin.
+Test, lint, build, API sinovlari, commit va push bajarilmadi.
+
+2-qism uchun commit nomi: `feat(user): connect profile settings and premium`.
+Keyingi qism: serverlar ro'yxati, yaratish, tafsilot va nom sozlamalari.

@@ -11,7 +11,8 @@ export function AuthBoundary({ children, guest = false }: { children: ReactNode;
   const pathname = usePathname()
   const { user, isAuthenticated, isInitialized, initialize } = useAuthStore()
   const home = authHome(user)
-  const wrongServer = Boolean(user?.defaultServerId) && pathname !== home && !pathname.startsWith(`${home}/`)
+  const profileRoute = pathname === "/profile" || pathname === "/users"
+  const wrongServer = Boolean(user?.defaultServerId) && !profileRoute && pathname !== home && !pathname.startsWith(`${home}/`)
   const redirect = isInitialized && (
     guest ? (isAuthenticated ? home : null) : (!isAuthenticated ? "/login" : wrongServer ? home : null)
   )

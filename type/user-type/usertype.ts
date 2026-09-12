@@ -1,3 +1,5 @@
+import type { AccountType } from "@/type/auth-type/authtype"
+
 export type UserRole = "USER" | "ADMIN_MEMBER" | "ADMIN" | "SUPER_ADMIN"
 export type UserStatus = "online" | "offline" | "idle" | "dnd"
 
@@ -31,6 +33,7 @@ export type UpdateUserSettingsPayload = {
 }
 
 export type UserProfile = {
+  accountType: AccountType
   id: string
   username: string | null
   firstname: string | null
@@ -50,10 +53,36 @@ export type UserProfile = {
 }
 
 export type User = UserProfile & {
+  assignedServerId: string | null
+  defaultServerId: string | null
   email: string
   phonenuber: string | null
   googleemail: string | null
   githubemail: string | null
   note: string | null
   bestfriends: string[]
+}
+
+// PATCH javobida defaultServerId yo'q; GET /me javobida bor.
+export type UserWriteResponse = Omit<User, "defaultServerId">
+
+export type UserState = {
+  user: User | null
+  profile: UserProfile | null
+  isLoading: boolean
+  error: string | null
+  message: string | null
+}
+
+export type UserActions = {
+  setUser: (user: User) => void
+  clearUser: () => void
+  setLoading: (loading: boolean) => void
+  setError: (error: string | null) => void
+  clearError: () => void
+  loadMe: (token: string) => Promise<boolean>
+  loadProfile: (id: string, token: string) => Promise<boolean>
+  updateMe: (payload: UpdateUserPayload, token: string) => Promise<boolean>
+  updateSettings: (id: string, payload: UpdateUserSettingsPayload, token: string) => Promise<boolean>
+  updatePremium: (id: string, premium: boolean, token: string) => Promise<boolean>
 }
