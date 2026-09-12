@@ -1,9 +1,3 @@
-function page() {
-  return (
-    <div>
-      home
-    </div>
-  )
+export default function HomePage() {
+  return <main><h1>Bosh sahifa</h1></main>
 }
-
-export default page

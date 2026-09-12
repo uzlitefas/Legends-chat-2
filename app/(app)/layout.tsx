@@ -1,11 +1,7 @@
-import { ChildProps } from "@/types/props"
+import type { ChildProps } from "@/types/props"
+import { AuthBoundary } from "@/components/auth/auth-boundary"
+import { SessionPanel } from "@/components/auth/session-panel"
 
-function layout({ children }: ChildProps) {
-  return (
-    <div>
-      {children}
-    </div>
-  )
+export default function AppLayout({ children }: ChildProps) {
+  return <AuthBoundary><SessionPanel />{children}</AuthBoundary>
 }
-
-export default layout
