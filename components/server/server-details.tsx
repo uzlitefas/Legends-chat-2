@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect } from "react"
+import { GroupList } from "@/components/group/group-list"
 import Link from "next/link"
 import { useAuthStore } from "@/stores/use-auth-store"
 import { useServerStore } from "@/stores/use-server-store"
@@ -27,6 +28,7 @@ export function ServerDetailsView({ serverId }: { serverId: string }) {
     <ServerMemberFeedback serverId={serverId} />
     {current && <>
       <h2>{current.name}</h2>
+      <GroupList serverId={current.id} ownerId={current.ownerId} />
       <dl>
         <dt>Server ID</dt><dd>{current.id}</dd>
         <dt>Ega ID</dt><dd>{current.ownerId}</dd>

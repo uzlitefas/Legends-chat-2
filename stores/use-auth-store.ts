@@ -2,6 +2,7 @@
 
 import { create } from "zustand"
 import { ApiError } from "@/service/api"
+import { useGroupStore } from "@/stores/use-group-store"
 import { authService } from "@/service/auth.service"
 import { useUserStore } from "@/stores/use-user-store"
 import { useServerStore } from "@/stores/use-server-store"
@@ -41,6 +42,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => {
     ...initialState,
     setAuth: ({ accessToken, sessionId, user }) => {
       if (get().user?.id !== user.id) {
+        useGroupStore.getState().clear()
         useUserStore.getState().clearUser()
         useServerStore.getState().clear()
         useServerMemberStore.getState().clear()
@@ -49,6 +51,7 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => {
         isInitialized: true, isLoading: false, error: null })
     },
     clearAuth: () => {
+      useGroupStore.getState().clear()
       useUserStore.getState().clearUser()
       useServerStore.getState().clear()
       useServerMemberStore.getState().clear()

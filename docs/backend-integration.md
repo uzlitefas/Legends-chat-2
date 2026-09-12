@@ -10,7 +10,7 @@ Yangi interfeyslar oddiy HTML: ranglar, CSS va dizayn qo'shilmaydi.
 | 2 | User profili, user settings, premium; type/service/store/component/page | Kod yozildi, tekshirilmagan |
 | 3 | Serverlar ro'yxati, yaratish, tafsilot va nom sozlamalari; barcha qatlamlar | Kod yozildi, tekshirilmagan |
 | 4 | Server a'zolarini qo'shish/chiqarish va SERVER_USER yaratish; barcha qatlamlar | Kod yozildi, tekshirilmagan |
-| 5 | Guruhlar, a'zolar va canEnter sozlamalari; barcha qatlamlar | Kutilmoqda |
+| 5 | Guruhlar, a'zolar va canEnter sozlamalari; barcha qatlamlar | Kod yozildi, tekshirilmagan |
 | 6 | Team yaratish va guruh ichida ko'rsatish; barcha qatlamlar | Kutilmoqda |
 | 7 | Voice HTTP/ICE, Socket.IO, WebRTC, mikrofon, quloqchin, ekran, reconnect; barcha qatlamlar | Kutilmoqda |
 
@@ -141,3 +141,40 @@ Maxsus hisobni boshqa serverga qo'shish cheklovini backend tekshiradi.
 Test, lint, build, API sinovlari, commit va push bajarilmadi.
 4-qism uchun commit nomi: `feat(server): manage members and server user accounts`.
 Keyingi qism: guruhlar, guruh a'zolari va canEnter ruxsatlari.
+
+## 5-qism fayllari
+
+- `type/group-type/grouptype.ts`: guruhlar, a'zolar, kirish sozlamalari,
+  payload/javob va store turlari. Tafsilot javobidagi teams maydoni ham tiplangan;
+  team yaratish va interfeysi 6-qismda ulanadi.
+- `service/group.service.ts`: guruh yaratish, ro'yxat, tafsilot,
+  a'zo qo'shish/chiqarish, settings olish va canEnter o'zgartirish.
+- `stores/use-group-store.ts`: server/guruh bo'yicha alohida holat,
+  yuklash, yozish, xato va muvaffaqiyat xabarlari. Eski so'rov natijalari
+  yangi so'rovni almashtirmaydi; logoutda kutilayotgan natijalar bekor qilinadi.
+- `components/group/group-list.tsx`: server ichidagi guruhlar va yaratish formasi.
+- `components/group/group-details.tsx`: guruh tafsilotlari, a'zolar,
+  a'zo qo'shish/chiqarish va kirish ruxsatlarini boshqarish.
+- `components/group/group-feedback.tsx`: yuklash, xato va muvaffaqiyat xabarlari.
+- `app/(app)/servers/[serverId]/groups/[groupId]/page.tsx`: guruh sahifasi.
+- `components/server/server-details.tsx`: guruhlar ro'yxati va havolalari.
+- `stores/use-auth-store.ts`: hisob almashganda va logoutda guruhlar tozalanadi.
+
+Guruh nomi 1–100 belgi. Guruh egasi alohida belgilanmaydi: uni tegishli
+server egasi boshqaradi. Ro'yxatda backend qaytargan kirish mumkin bo'lgan
+guruhlar ko'rsatiladi. Guruh yaratish va a'zolarni boshqarish server egasiga ochiq.
+Haqiqiy huquqni backend tekshiradi; SUPER_ADMIN roli o'zi yetarli emas.
+
+Yangi guruh a'zosi avval server a'zosi bo'lishi kerak; qo'shishda faqat userId
+yuboriladi, canEnter esa alohida PATCH bilan boolean sifatida yuboriladi.
+canEnter=false a'zolikni saqlaydi. Chiqarish esa guruh a'zoligini o'chiradi.
+Egani chiqarish yoki kirishini yopish tugmalari yo'q.
+GET settings faqat ega uchun chaqiriladi va updatedAt ko'rsatiladi.
+Amaldan so'ng tafsilot, settings va guruhlar ro'yxati yangilanadi.
+
+Bu qismda live yangilanish yo'q; boshqa foydalanuvchi o'zgartirgan ruxsatlar
+qayta yuklashda backenddan olinadi. Token sessiyani yangilash tugmasi orqali yangilanadi.
+Test, lint, build, API sinovlari, commit va push bajarilmadi.
+
+5-qism uchun commit nomi: `feat(group): connect groups members and access settings`.
+Keyingi qism: guruh ichidagi teamlar.
