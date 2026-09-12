@@ -11,7 +11,7 @@ Yangi interfeyslar oddiy HTML: ranglar, CSS va dizayn qo'shilmaydi.
 | 3 | Serverlar ro'yxati, yaratish, tafsilot va nom sozlamalari; barcha qatlamlar | Kod yozildi, tekshirilmagan |
 | 4 | Server a'zolarini qo'shish/chiqarish va SERVER_USER yaratish; barcha qatlamlar | Kod yozildi, tekshirilmagan |
 | 5 | Guruhlar, a'zolar va canEnter sozlamalari; barcha qatlamlar | Kod yozildi, tekshirilmagan |
-| 6 | Team yaratish va guruh ichida ko'rsatish; barcha qatlamlar | Kutilmoqda |
+| 6 | Team yaratish va guruh ichida ko'rsatish; barcha qatlamlar | Kod yozildi, tekshirilmagan |
 | 7 | Voice HTTP/ICE, Socket.IO, WebRTC, mikrofon, quloqchin, ekran, reconnect; barcha qatlamlar | Kutilmoqda |
 
 ## 1-qism fayllari
@@ -178,3 +178,29 @@ Test, lint, build, API sinovlari, commit va push bajarilmadi.
 
 5-qism uchun commit nomi: `feat(group): connect groups members and access settings`.
 Keyingi qism: guruh ichidagi teamlar.
+
+## 6-qism fayllari
+
+- `type/team-type/teamtype.ts`: Team, yaratish payloadi va store turlari.
+- `type/group-type/grouptype.ts`: GroupTeam umumiy Team tipiga ulandi.
+- `service/team.service.ts`: POST /servers/:id/groups/:groupId/teams.
+- `stores/use-team-store.ts`: guruh bo'yicha yaratish holati, xato va yangi team javobi.
+- `components/team/create-team-form.tsx`: oddiy nom formasi.
+- `components/team/team-list.tsx`: guruh javobidagi teams ro'yxati va maydonlari.
+- `components/team/team-feedback.tsx`: yaratish holati va natijasi.
+- `components/group/group-details.tsx`: mavjud guruh sahifasiga team componentlari ulandi.
+- `stores/use-auth-store.ts`: logout/hisob almashganda team holati tozalanadi.
+
+Team yaratishni faqat server egasi ko'radi; haqiqiy huquq backendda tekshiriladi.
+Nom trim qilinadi va 1–100 belgi bilan cheklanadi. Payload faqat name yuboradi.
+Teamlar alohida GET endpointdan emas, guruh tafsilotidagi teams maydonidan olinadi;
+backend bergan tartib saqlanadi. Guruhga kirishi bor user teamlarni ham ko'radi.
+Yaratilgandan keyin guruh qayta yuklanadi. Yaratish muvaffaqiyatli bo'lib, qayta
+yuklash xato bersa, natija saqlanadi va yuklash xatosi alohida ko'rsatiladi.
+Logout eski so'rov natijalarini storega qaytarib yozishni to'xtatadi.
+
+Team tahrirlash/o'chirish endpointlari backendda yo'q. Voice ulanishi 7-qismda.
+Test, lint, build, API sinovlari, commit va push bajarilmadi.
+
+6-qism uchun commit nomi: `feat(team): connect team creation and group team list`.
+Keyingi qism: voice, mikrofon, quloqchin, ekran ulash va reconnect.

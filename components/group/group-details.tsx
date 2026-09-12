@@ -7,9 +7,14 @@ import { useAuthStore } from "@/stores/use-auth-store"
 import { useServerStore } from "@/stores/use-server-store"
 import { emptyGroupEntry, groupKey, useGroupStore } from "@/stores/use-group-store"
 import { GroupFeedback } from "./group-feedback"
+import { CreateTeamForm } from "@/components/team/create-team-form"
+import { TeamList } from "@/components/team/team-list"
+import { TeamFeedback } from "@/components/team/team-feedback"
+import { useTeamStore } from "@/stores/use-team-store"
 
 export function GroupDetailsView({ serverId, groupId }: { serverId: string; groupId: string }) {
   const { accessToken, user } = useAuthStore()
+  const teamSaving = useTeamStore((state) => state.entries[groupKey(serverId, groupId)]?.isSaving ?? false)
   const { server, loadOne, detailError } = useServerStore()
   const owner = server?.id === serverId && server.ownerId === user?.id
   const entry = useGroupStore((state) => state.entries[groupKey(serverId, groupId)] ?? emptyGroupEntry)
@@ -23,7 +28,7 @@ export function GroupDetailsView({ serverId, groupId }: { serverId: string; grou
     const userId = String(new FormData(form).get("userId") ?? "").trim()
     if (await addMember(serverId, groupId, userId, accessToken)) form.reset()
   }
-  const busy = entry.loading || entry.saving || !accessToken
+  const busy = entry.loading || entry.saving || teamSaving || !accessToken
   return <main>
     <h1>Guruh</h1>
     <Link href={`/servers/${encodeURIComponent(serverId)}`}>Serverga qaytish</Link>
@@ -32,8 +37,11 @@ export function GroupDetailsView({ serverId, groupId }: { serverId: string; grou
     }}>Qayta yuklash</button>
     {detailError && <p role="alert">Server: {detailError}</p>}
     <GroupFeedback entry={entry} />
+    <TeamFeedback serverId={serverId} groupId={groupId} />
     {entry.group && <>
       <h2>{entry.group.name}</h2>
+      <TeamList teams={entry.group.teams} />
+      {owner && <CreateTeamForm serverId={serverId} groupId={groupId} />}
       <p>Guruh ID: {entry.group.id}</p><p>Server ID: {entry.group.serverId}</p>
       <p>Yaratilgan: {entry.group.createdAt}</p><p>Yangilangan: {entry.group.updatedAt}</p>
       {owner && <form onSubmit={add}>

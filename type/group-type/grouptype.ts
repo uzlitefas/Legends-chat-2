@@ -1,4 +1,5 @@
 import type { ServerMember } from "@/type/server-type/servertype"
+import type { Team } from "@/type/team-type/teamtype"
 
 export type Group = { id: string; serverId: string; name: string; createdAt: string; updatedAt: string }
 export type GroupSummary = Group & { _count: { members: number } }
@@ -8,7 +9,7 @@ export type GroupMember = {
   createdAt: string
   serverMember: { user: ServerMember["user"] }
 }
-export type GroupTeam = { id: string; serverId: string; groupId: string; name: string; createdAt: string; updatedAt: string }
+export type GroupTeam = Team
 export type GroupDetails = Group & { members: GroupMember[]; teams: GroupTeam[] }
 export type GroupAccess = { userId: string; canEnter: boolean; updatedAt: string }
 export type UpdateGroupAccessResponse = GroupAccess & { groupId: string }
