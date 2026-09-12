@@ -8,7 +8,7 @@ Yangi interfeyslar oddiy HTML: ranglar, CSS va dizayn qo'shilmaydi.
 | --- | --- | --- |
 | 1 | Auth types, service, store, login/register, cookie refresh, logout, serverga yo'naltirish | Kod yozildi, tekshirilmagan |
 | 2 | User profili, user settings, premium; type/service/store/component/page | Kod yozildi, tekshirilmagan |
-| 3 | Serverlar ro'yxati, yaratish, tafsilot va nom sozlamalari; barcha qatlamlar | Kutilmoqda |
+| 3 | Serverlar ro'yxati, yaratish, tafsilot va nom sozlamalari; barcha qatlamlar | Kod yozildi, tekshirilmagan |
 | 4 | Server a'zolarini qo'shish/chiqarish va SERVER_USER yaratish; barcha qatlamlar | Kutilmoqda |
 | 5 | Guruhlar, a'zolar va canEnter sozlamalari; barcha qatlamlar | Kutilmoqda |
 | 6 | Team yaratish va guruh ichida ko'rsatish; barcha qatlamlar | Kutilmoqda |
@@ -79,3 +79,32 @@ Test, lint, build, API sinovlari, commit va push bajarilmadi.
 
 2-qism uchun commit nomi: `feat(user): connect profile settings and premium`.
 Keyingi qism: serverlar ro'yxati, yaratish, tafsilot va nom sozlamalari.
+
+## 3-qism fayllari
+
+- `type/server-type/servertype.ts`: server, ro'yxat/yaratish/sozlash javobi,
+  tafsilotlar va a'zolarning ochiq maydonlari, payload va store turlari.
+- `service/server.service.ts`: GET /servers, GET /servers/:id,
+  POST /servers va PATCH /servers/:id/settings.
+- `stores/use-server-store.ts`: ro'yxat, tanlangan server, yaratish va nomni
+  saqlash. Loading, xato va muvaffaqiyat holatlari. Eski o'qish natijasi yangi
+  server tanlovini almashtirmaydi; logoutda kutilayotgan natijalar bekor qilinadi.
+- `components/server/`: ro'yxat, yaratish formasi, tafsilot va nom sozlamalari.
+- `app/(app)/(home)/page.tsx` va `app/(app)/servers/page.tsx`: serverlar ro'yxati.
+- `app/(app)/servers/[serverId]/page.tsx`: haqiqiy backend tafsilotlari.
+- `stores/use-auth-store.ts`: logout yoki hisob almashganda server store tozalanadi.
+- `components/auth/session-panel.tsx`: oddiy hisoblar uchun serverlar havolasi.
+
+SUPER_ADMIN yangi server egasining mavjud User ID qiymatini kiritadi. Agar
+server boshqa userga berilsa, u yaratuvchining serverlari ro'yxatiga qo'shilmaydi;
+yaratilgan server IDsi alohida ko'rsatiladi. Backend haqiqiy huquqni tekshiradi.
+Nomni faqat ownerId joriy user IDga teng bo'lganda tahrirlash formasi ko'rsatiladi.
+Nom 1–100 belgidan iborat; egalikni almashtirish amali yo'q.
+
+SERVER_USER avvalgidek bevosita biriktirilgan serveriga yo'naltiriladi.
+Tafsilotda a'zolar o'qiladi; a'zo qo'shish/chiqarish va maxsus hisob yaratish 4-qismda.
+Token yangilash avvalgi sessiya tugmasi orqali bajariladi.
+Test, lint, build, API sinovlari, commit va push bajarilmadi.
+
+3-qism uchun commit nomi: `feat(server): connect server list creation and settings`.
+Keyingi qism: server a'zolari va SERVER_USER hisoblarini boshqarish.

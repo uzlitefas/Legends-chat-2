@@ -1,5 +1,5 @@
 import { ServerList } from "@/components/server/server-list"
 
-export default function HomePage() {
+export default function ServersPage() {
   return <ServerList />
 }

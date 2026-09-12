@@ -4,6 +4,7 @@ import { create } from "zustand"
 import { ApiError } from "@/service/api"
 import { authService } from "@/service/auth.service"
 import { useUserStore } from "@/stores/use-user-store"
+import { useServerStore } from "@/stores/use-server-store"
 import type { AuthActions, AuthResponse, AuthState } from "@/type/auth-type/authtype"
 
 const initialState: AuthState = {
@@ -38,12 +39,16 @@ export const useAuthStore = create<AuthState & AuthActions>()((set, get) => {
   return {
     ...initialState,
     setAuth: ({ accessToken, sessionId, user }) => {
-      if (get().user?.id !== user.id) useUserStore.getState().clearUser()
+      if (get().user?.id !== user.id) {
+        useUserStore.getState().clearUser()
+        useServerStore.getState().clear()
+      }
       set({ accessToken, sessionId, user, isAuthenticated: true,
         isInitialized: true, isLoading: false, error: null })
     },
     clearAuth: () => {
       useUserStore.getState().clearUser()
+      useServerStore.getState().clear()
       set({ ...initialState, isInitialized: true })
     },
     setLoading: (isLoading) => set({ isLoading }),

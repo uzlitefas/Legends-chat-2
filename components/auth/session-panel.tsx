@@ -11,6 +11,7 @@ export function SessionPanel() {
       <h2>Sessiya</h2>
       <nav>
         <Link href={authHome(user)}>Bosh sahifa</Link>{" "}
+        {!user?.defaultServerId && <><Link href="/servers">Serverlarim</Link>{" "}</>}
         <Link href="/profile">Profilim</Link>{" "}
         <Link href="/users">Foydalanuvchi profili</Link>{" "}
         {user?.accountType === "REGULAR" && user.role === "SUPER_ADMIN" && (
